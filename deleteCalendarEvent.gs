@@ -1,9 +1,9 @@
 //goal: highlight a number of cells in a row, press a picture that acts as a button
-//goal: then an event is created on a calendar based on the info highlighted
+//goal: then any events are matching the info highlighted are deleted on a calendar
 //notes: two of the cells will be date and time
 //notes: in this example, one cell dictates which calendar it goes on
 //notes: another cell is the name of the event, which also dictates the duration of the event
-function createCalEvent() {
+function deleteCalEvent() {
   //insert correct sheet name below
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet Name');
   var selected = sheet.getActiveRange();
@@ -46,17 +46,23 @@ function createCalEvent() {
 
   //this checks that you have selected the first column and fourth column, exactly 4 columns, and only 1 row - change as necessary with above!
   if (selected.getColumn() == 1 && selected.getLastColumn() == 4 && selected.getNumColumns() == 4 && selected.getNumRows() == 1) {
-    var cal = calendar(sheet.getRange(row, calendarColumn).getValue());
-    var date = new Date(sheet.getRange(row, dateColumn).getValue());
-    var hourAdj = new Date(sheet.getRange(row, timeColumn).getValue()).getHours();
+    var cal = calendar(sheet.getRange(row, calendarColumn).getValue()); //for this, the calendar is in column 3
+    var date = new Date(sheet.getRange(row, dateColumn).getValue()); //for this, the date is in column 1
+    var hourAdj = new Date(sheet.getRange(row, timeColumn).getValue()).getHours(); //for this, the time is in column 2
     var minAdj = new Date(sheet.getRange(row, timeColumn).getValue()).getMinutes();
     var startTime = date.setHours(hourAdj, minAdj);
-    //this creates an event on the calendar with the date, time, and name selected
-    cal.createEvent(sheet.getRange(row, eventColumn).getValue(), new Date(startTime), new Date(startTime + (getDuration(sheet.getRange(row, eventColumn).getValue()) * 60 * 1000)));
-    //this grabs the calendar name or TBD is no name specified
-    var calText = sheet.getRange(row, calendarColumn).getValue() == '' ? 'TBD' : sheet.getRange(row, calendarColumn).getValue();
-    //and gives us a text box message telling us the name of the event and where it was posted (and that we were successful)
-    Browser.msgBox('Successfully posted ' + sheet.getRange(row, eventColumn).getValue() + ' on ' + calText);
+    //this grabs all events (should be one) on the calendar specified that match the date, time, and name
+    var events = cal.getEvents(new Date(startTime), new Date(startTime + (getDuration(sheet.getRange(row, eventColumn).getValue()) * 60 * 1000)), {search: sheet.getRange(row, eventColumn).getValue()});
+    if (events.length > 0) { //if it finds any events
+      for (var i = 0; i < events.length; i++) { //loop, in case multiple have been created
+        events[i].deleteEvent();
+      }
+      //this grabs the calendar name or TBD is no name specified
+      var calText = sheet.getRange(row, calendarColumn).getValue() == '' ? 'TBD' : sheet.getRange(row, calendarColumn).getValue();
+      //this erases the calendar cell after the event has been deleted (optional)
+      sheet.getRange(row, calendarColumn).setValue('');
+      //and gives us a text box message telling us the name of the event and where it was posted (and that we were successful)
+      Browser.msgBox('Successfully posted ' + sheet.getRange(row, eventColumn).getValue() + ' on ' + calText);
   }
 
 }
@@ -65,4 +71,4 @@ function createCalEvent() {
 //right click the image and 'assign script'
 //give the name of the script (nameOfScript.gs) but without the .gs
 //only those who can edit the sheet can click on the image and execute the script
-//only those who own or subscribe to the calendars can actually post events to the calendars
+//only those who own or subscribe to the calendars can actually delete events to the calendars
