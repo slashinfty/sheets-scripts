@@ -16,7 +16,7 @@ function createNewSheet() {
   var rightCell = sheet.getDataRange().getCell(row, rightColumn);
   var rightCellText = rightCell.getValue();
 
-  //
+  //insert correct template sheet name below
   var templateSheet = spreadsheet.getSheetByName('Template Sheet Name');
 
   //checks to make sure both cells have text in them
