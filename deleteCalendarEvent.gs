@@ -64,7 +64,7 @@ function deleteCalEvent() {
       //this erases the calendar cell after the event has been deleted (optional)
       sheet.getRange(row, calendarColumn).setValue('');
       //and gives us a text box message telling us the name of the event and where it was posted (and that we were successful)
-      Browser.msgBox('Successfully posted ' + sheet.getRange(row, eventColumn).getValue() + ' on ' + calText);
+      Browser.msgBox('Successfully deleted ' + sheet.getRange(row, eventColumn).getValue() + ' on ' + calText);
   }
 
 }
