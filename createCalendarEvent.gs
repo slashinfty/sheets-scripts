@@ -44,19 +44,21 @@ function createCalEvent() {
   var calendarColumn = 3;
   var eventColumn = 4;
 
-  //this checks that you have selected the first column and fourth column, exactly 4 columns, and only 1 row - change as necessary with above!
-  if (selected.getColumn() == 1 && selected.getLastColumn() == 4 && selected.getNumColumns() == 4 && selected.getNumRows() == 1) {
+  //this checks that you aren't selecting multiple rows
+  if (selected.getNumRows() == 1) {
     var cal = calendar(sheet.getRange(row, calendarColumn).getValue());
     var date = new Date(sheet.getRange(row, dateColumn).getValue());
     var hourAdj = new Date(sheet.getRange(row, timeColumn).getValue()).getHours();
     var minAdj = new Date(sheet.getRange(row, timeColumn).getValue()).getMinutes();
     var startTime = date.setHours(hourAdj, minAdj);
+	var duration = getDuration(sheet.getRange(row, eventColumn).getValue();
+	var eventName = sheet.getRange(row, eventColumn).getValue();
     //this creates an event on the calendar with the date, time, and name selected
-    cal.createEvent(sheet.getRange(row, eventColumn).getValue(), new Date(startTime), new Date(startTime + (getDuration(sheet.getRange(row, eventColumn).getValue()) * 60 * 1000)));
+    cal.createEvent(eventName, new Date(startTime), new Date(startTime + (duration * 60 * 1000)));
     //this grabs the calendar name or TBD is no name specified
     var calText = sheet.getRange(row, calendarColumn).getValue() == '' ? 'TBD' : sheet.getRange(row, calendarColumn).getValue();
     //and gives us a text box message telling us the name of the event and where it was posted (and that we were successful)
-    Browser.msgBox('Successfully posted ' + sheet.getRange(row, eventColumn).getValue() + ' on ' + calText);
+    Browser.msgBox('Successfully posted ' + eventName + ' on ' + calText);
   }
 
 }

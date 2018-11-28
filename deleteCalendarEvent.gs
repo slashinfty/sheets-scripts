@@ -44,18 +44,20 @@ function deleteCalEvent() {
   var calendarColumn = 3;
   var eventColumn = 4;
 
-  //this checks that you have selected the first column and fourth column, exactly 4 columns, and only 1 row - change as necessary with above!
-  if (selected.getColumn() == 1 && selected.getLastColumn() == 4 && selected.getNumColumns() == 4 && selected.getNumRows() == 1) {
+  //this checks that you aren't selecting multiple rows
+  if (selected.getNumRows() == 1) {
     var cal = calendar(sheet.getRange(row, calendarColumn).getValue()); //for this, the calendar is in column 3
     var date = new Date(sheet.getRange(row, dateColumn).getValue()); //for this, the date is in column 1
     var hourAdj = new Date(sheet.getRange(row, timeColumn).getValue()).getHours(); //for this, the time is in column 2
     var minAdj = new Date(sheet.getRange(row, timeColumn).getValue()).getMinutes();
     var startTime = date.setHours(hourAdj, minAdj);
+	var duration = getDuration(sheet.getRange(row, eventColumn).getValue());
+	var eventName = sheet.getRange(row, eventColumn).getValue();
     //this grabs all events (should be one) on the calendar specified that match the date, time, and name
-    var events = cal.getEvents(new Date(startTime), new Date(startTime + (getDuration(sheet.getRange(row, eventColumn).getValue()) * 60 * 1000)), {search: sheet.getRange(row, eventColumn).getValue()});
+    var events = cal.getEvents(new Date(startTime), new Date(startTime + (duration * 60 * 1000)), {search: eventName});
     if (events.length > 0) { //if it finds any events
-      for (var i = 0; i < events.length; i++) { //loop, in case multiple have been created
-        events[i].deleteEvent();
+      for each (var event in events) { //loop, in case multiple have been created
+        event.deleteEvent();
       }
       //this grabs the calendar name or TBD is no name specified
       var calText = sheet.getRange(row, calendarColumn).getValue() == '' ? 'TBD' : sheet.getRange(row, calendarColumn).getValue();
