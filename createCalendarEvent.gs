@@ -1,4 +1,4 @@
-//goal: highlight a number of cells in a row, press a picture that acts as a button
+//goal: select a cell in a row, press a picture that acts as a button
 //goal: then an event is created on a calendar based on the info highlighted
 //notes: two of the cells will be date and time
 //notes: in this example, one cell dictates which calendar it goes on
@@ -38,7 +38,7 @@ function createCalEvent() {
     return (duration[event] || duration['default']);
   }
 
-  //change these as necessary, but ensure they are sequential in a single row
+  //change these as necessary
   var dateColumn = 1;
   var timeColumn = 2;
   var calendarColumn = 3;

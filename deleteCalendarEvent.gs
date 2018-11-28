@@ -1,4 +1,4 @@
-//goal: highlight a number of cells in a row, press a picture that acts as a button
+//goal: select a cell in a row, press a picture that acts as a button
 //goal: then any events are matching the info highlighted are deleted on a calendar
 //notes: two of the cells will be date and time
 //notes: in this example, one cell dictates which calendar it goes on
@@ -38,7 +38,7 @@ function deleteCalEvent() {
     return (duration[event] || duration['default']);
   }
 
-  //change these as necessary, but ensure they are sequential in a single row
+  //change these as necessary
   var dateColumn = 1;
   var timeColumn = 2;
   var calendarColumn = 3;
